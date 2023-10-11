@@ -1,3 +1,3 @@
 from databases import Database
-DATABASE_URL = "postgresql://postgres:koala_panda_123@localhost/otp"
+DATABASE_URL = "mysql://anvarisy_anvarisy:koala_panda_123@joy.jagoanhosting.com:3306/anvarisy_otp"
 database = Database(DATABASE_URL)
