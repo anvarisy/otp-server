@@ -31,13 +31,13 @@ class RandomForestImplementation:
             ])
 
         X_processed = preprocessor.fit_transform(X)
-        feature_names = preprocessor.named_transformers_['cat'].get_feature_names_out(categorical_features)
+        # feature_names = preprocessor.named_transformers_['cat'].get_feature_names_out(categorical_features)
 
         # Membagi data menjadi set pelatihan dan set pengujian
         X_train, X_test, y_train, y_test = train_test_split(X_processed, y, test_size=0.25, random_state=50)
 
         # Inisialisasi dan pelatihan model Random Forest
-        clf = RandomForestClassifier(n_estimators=100, class_weight='balanced', random_state=50)
+        clf = RandomForestClassifier(n_estimators=20, class_weight='balanced', random_state=50)
         clf.fit(X_train, y_train)
         # for idx, single_tree in enumerate(clf.estimators_[:10]):
         # # for idx, single_tree in enumerate(clf.estimators_[98:100], start=99):
@@ -61,7 +61,19 @@ class RandomForestImplementation:
         y_pred = clf.predict(X_test)
         print("Accuracy:", accuracy_score(y_test, y_pred))
         print("Confussion Matrix:", confusion_matrix(y_test, y_pred))
-        print("\nClassification Report:\n", classification_report(y_test, y_pred))
+        print("\nClassification Report:\n", classification_report(y_test, y_pred, zero_division=1))
+        tree_predictions = [tree.predict(X_test) for tree in clf.estimators_]
+        tree_predictions_matrix = np.array(tree_predictions).T
+        
+        #How vote works
+        # votes = []
+        # for row in tree_predictions_matrix:
+        #     unique, counts = np.unique(row, return_counts=True)
+        #     votes.append(dict(zip(unique, counts)))
+        # for i, vote in enumerate(votes):
+        #     print(f"Sampel ke-{i + 1} mendapatkan suara: {vote}")
+
+
         svd = TruncatedSVD(n_components=2)
         X_pca = svd.fit_transform(X_processed)
 

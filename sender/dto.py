@@ -49,17 +49,17 @@ class RequestOtpEntity(BaseModel):
 class ValidateOtpEntity(BaseModel):
     otp: str
     otp_id: str
-    ip: str
-    package_name: str
-    geolocation: Geolocation
-    device: Device
+    # ip: str
+    # package_name: str
+    # geolocation: Geolocation
+    # device: Device
 
     def to_dict(self):
         return {
             "otp": self.otp,
-            "otp_id": self.otp_id,
-            "ip": self.ip,
-            "package_name": self.package_name,
-            "geolocation": self.geolocation.to_dict(),
-            "device": self.device.to_dict()
+            "otp_id": self.otp_id
+            # "ip": self.ip,
+            # "package_name": self.package_name,
+            # "geolocation": self.geolocation.to_dict(),
+            # "device": self.device.to_dict()
         }

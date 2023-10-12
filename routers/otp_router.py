@@ -73,6 +73,7 @@ async def request_otp(request_otp_data: RequestOtpEntity):
 
 @router.post("/verify")
 async def verify_otp(validate_otp_data: ValidateOtpEntity):
+    print(validate_otp_data)
     # Membuat request untuk verifikasi OTP ke service lain
     response = await otp.send_otp_verify(otp=validate_otp_data.otp, otp_id=validate_otp_data.otp_id)
     

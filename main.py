@@ -5,6 +5,8 @@ from sqlalchemy import MetaData
 from fastapi import HTTPException
 import logging
 from routers import otp_router, file_router, ml_router
+from uvicorn import run
+import uvicorn
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s',
                     handlers=[logging.FileHandler("app.log"), logging.StreamHandler()])
@@ -78,3 +80,7 @@ async def shutdown():
 #         content = f.read()
 
 #     return {"filename": filename, "content": content}
+  # Gantikan 'nama_modul' dengan nama modul Anda
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=2000, reload=True)
