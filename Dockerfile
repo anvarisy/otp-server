@@ -1,5 +1,5 @@
 # Gunakan gambar Python resmi
-FROM python:3.8
+FROM python:3.11
 ENV PYTHONUNBUFFERED True
 # Set the timezone
 RUN echo "Asia/Jakarta" > /etc/timezone && \

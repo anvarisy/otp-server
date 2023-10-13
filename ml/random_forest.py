@@ -1,7 +1,7 @@
 import pandas as pd
 import joblib
 import matplotlib.pyplot as plt
-from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.metrics import accuracy_score, confusion_matrix, precision_recall_fscore_support
 from sklearn.compose import ColumnTransformer
 from sklearn.decomposition import PCA, TruncatedSVD
 from sklearn.ensemble import RandomForestClassifier
@@ -37,7 +37,7 @@ class RandomForestImplementation:
         X_train, X_test, y_train, y_test = train_test_split(X_processed, y, test_size=0.25, random_state=50)
 
         # Inisialisasi dan pelatihan model Random Forest
-        clf = RandomForestClassifier(n_estimators=20, class_weight='balanced', random_state=50)
+        clf = RandomForestClassifier(n_estimators=150, class_weight='balanced', random_state=50)
         clf.fit(X_train, y_train)
         # for idx, single_tree in enumerate(clf.estimators_[:10]):
         # # for idx, single_tree in enumerate(clf.estimators_[98:100], start=99):
@@ -59,13 +59,15 @@ class RandomForestImplementation:
         joblib.dump(preprocessor, 'preprocessor.pkl')
         # Prediksi dan evaluasi performa
         y_pred = clf.predict(X_test)
-        print("Accuracy:", accuracy_score(y_test, y_pred))
+        accuracy = accuracy_score(y_test, y_pred)
+        print("Accuracy:", accuracy)
         print("Confussion Matrix:", confusion_matrix(y_test, y_pred))
-        print("\nClassification Report:\n", classification_report(y_test, y_pred, zero_division=1))
-        tree_predictions = [tree.predict(X_test) for tree in clf.estimators_]
-        tree_predictions_matrix = np.array(tree_predictions).T
+        report = classification_report(y_test, y_pred, zero_division=1)
+
         
-        #How vote works
+        # How vote works
+        # tree_predictions = [tree.predict(X_test) for tree in clf.estimators_]
+        # tree_predictions_matrix = np.array(tree_predictions).T
         # votes = []
         # for row in tree_predictions_matrix:
         #     unique, counts = np.unique(row, return_counts=True)
@@ -81,17 +83,22 @@ class RandomForestImplementation:
         plt.figure(figsize=(10, 6))
         plt.scatter(X_pca[y == 'normal', 0], X_pca[y == 'normal', 1], color='blue', label='Normal')
         plt.scatter(X_pca[y == 'anomaly', 0], X_pca[y == 'anomaly', 1], color='red', label='Anomaly')
-        plt.title('PCA of Dataset')
+        plt.title('Pricipal Component Analysis of Dataset')
         plt.xlabel('Principal Component 1')
         plt.ylabel('Principal Component 2')
         plt.legend()
+        # Menambahkan teks metrik ke plot
+        plt.text(min(X_pca[:, 0]), max(X_pca[:, 1]), f"Accuracy: {accuracy:.2f}", fontsize=10, ha="left")
+        # plt.text(min(X_pca[:, 0]), max(X_pca[:, 1]) - 0.5, f"Report: {report}", fontsize=10, ha="left")
+
         plt.show()
 
     
     def predict(self, data):
         model = joblib.load('random_forest_model.pkl')
         preprocessor = joblib.load('preprocessor.pkl')  # Memuat preprocessor
-        data_df = pd.DataFrame([data])
+        data_df = pd.DataFrame([data.dict()])
+        print(data_df)
         # Melakukan pra-pemrosesan pada data
         data_processed = preprocessor.transform(data_df)
         result = model.predict(data_processed)

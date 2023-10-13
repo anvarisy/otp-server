@@ -29,7 +29,9 @@ class IsolationImplementaion:
         preprocessor = ColumnTransformer(
             transformers=[
                 ('cat', categorical_transformer, categorical_features)
-            ])
+            ], 
+            sparse_threshold=0.0
+)
         
         # Create pipeline
         self.clf = Pipeline(steps=[('preprocessor', preprocessor),

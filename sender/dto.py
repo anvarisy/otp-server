@@ -63,3 +63,67 @@ class ValidateOtpEntity(BaseModel):
             # "geolocation": self.geolocation.to_dict(),
             # "device": self.device.to_dict()
         }
+
+class UserActionEntity(BaseModel):
+    pic_id: str
+    purpose: str
+    latitude: float
+    longitude: float
+    device_name: str
+    os_version: str
+    manufacturer: str
+    cpu_info: str
+    platform: str
+    ip: str
+
+    def to_dict(self):
+        return {
+        "pic_id": self.pic_id,
+        "purpose": self.purpose,
+        "latitude": self.latitude,
+        "longitude": self.longitude,
+        "device_name": self.device_name,
+        "os_version": self.os_version,
+        "manufacturer": self.manufacturer,
+        "cpu_info": self.cpu_info,
+        "platform": self.platform,
+        "ip": self.ip
+    }
+
+class RandomForestResponse(BaseModel):
+    error: str
+    status: bool
+    data: dict
+    
+    def to_dict(self):
+        return {
+            "error": self.error,
+            "status": self.status,
+            "data": self.data
+        }
+        
+class UploadResponse(BaseModel):
+    error: str
+    status: bool
+    data: list
+    def to_dict(self):
+        return {
+            "error": self.error,
+            "status": self.status,
+            "data": self.data
+        }
+
+class LearnResponse(BaseModel):
+    error: str
+    status: bool
+    def to_dict(self):
+        return {
+            "error": self.error,
+            "status": self.status,
+        }
+class LearnRequest(BaseModel):
+    file_name: str
+    def to_dict(self):
+        return {
+            "error": self.file_name,
+        }

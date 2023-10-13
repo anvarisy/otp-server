@@ -27,7 +27,7 @@ metadata = MetaData()
 app.openapi = custom_openapi
 
 
-app.include_router(otp_router.router, prefix="/otp", tags=["OTP"])
+# app.include_router(otp_router.router, prefix="/otp", tags=["OTP"])
 app.include_router(file_router.router, prefix="/upload", tags=["Upload"])
 app.include_router(ml_router.router, prefix="/ml", tags=["Machine Learning"])
 
