@@ -1,10 +1,11 @@
 from fastapi.openapi.utils import get_openapi
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from dbconf import conf
 from sqlalchemy import MetaData
 from fastapi import HTTPException
 import logging
-from routers import otp_router, file_router, ml_router
+from routers import otp_router, file_router, ml_router, view_router
 from uvicorn import run
 import uvicorn
 logging.basicConfig(level=logging.INFO,
@@ -28,19 +29,20 @@ app.openapi = custom_openapi
 
 
 # app.include_router(otp_router.router, prefix="/otp", tags=["OTP"])
-app.include_router(file_router.router, prefix="/upload", tags=["Upload"])
+app.include_router(file_router.router, prefix="/file", tags=["File"])
 app.include_router(ml_router.router, prefix="/ml", tags=["Machine Learning"])
-
-@app.on_event("startup")
-async def startup():
-    try:
-        await conf.database.connect()
-    except Exception as e:
-        logging.error(e)
-        raise HTTPException(status_code=500, detail="Database connection error")
-@app.on_event("shutdown")
-async def shutdown():
-    await conf.database.disconnect()
+app.include_router(view_router.router, prefix="/view", tags=["View Implementation"])
+app.mount("/static", StaticFiles(directory="static"), name="static")
+# @app.on_event("startup")
+# async def startup():
+#     try:
+#         await conf.database.connect()
+#     except Exception as e:
+#         logging.error(e)
+#         raise HTTPException(status_code=500, detail="Database connection error")
+# @app.on_event("shutdown")
+# async def shutdown():
+#     await conf.database.disconnect()
 
 # @app.get("/merchant/seed")
 # async def seed_merchant():

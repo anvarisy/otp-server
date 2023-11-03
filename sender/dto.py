@@ -123,7 +123,11 @@ class LearnResponse(BaseModel):
         }
 class LearnRequest(BaseModel):
     file_name: str
+    tree_estimator: float
+    test_count: float
     def to_dict(self):
         return {
-            "error": self.file_name,
+            "file_name": self.file_name,
+            "tree_estimator": self.tree_estimator,
+            "test_count": self.test_count,
         }

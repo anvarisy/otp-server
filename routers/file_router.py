@@ -12,7 +12,6 @@ async def upload_data(file: UploadFile = File(...)):
         try:
             if file.content_type != "text/csv":
                 raise HTTPException(status_code=400, detail="File type not supported")
-
             if not os.path.exists(UPLOAD_DIR):
                 os.makedirs(UPLOAD_DIR)
 
@@ -34,14 +33,6 @@ async def upload_data(file: UploadFile = File(...)):
         except HTTPException as e:
             return {
                 "error": e.detail,
-                "status": False,
-                "data": []
-            }
-    
-        except Exception as e:
-        # Sama seperti sebelumnya, berhati-hatilah saat mengembalikan pesan error ke pengguna.
-            return {
-                "error": str(e),
                 "status": False,
                 "data": []
             }

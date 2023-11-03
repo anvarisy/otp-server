@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View</title>
+    <link rel="icon" type="image/x-icon" href="/static/images/koala.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+    {% include '_navbar.html' %}
+
+    <div class="text-center">
+        <h1>Training Results</h1>
+        <h2>Confusion Matrix</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Predicted: Anomaly</th>
+                    <th>Predicted: Normal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Actual: Anomaly</th>
+                    <td>{{ metrics.conf_matrix[0][0] }} (True Negative)</td>
+                    <td>{{ metrics.conf_matrix[0][1] }} (False Positive)</td>
+                </tr>
+                <tr>
+                    <th>Actual: Normal</th>
+                    <td>{{ metrics.conf_matrix[1][0] }} (False Negative)</td>
+                    <td>{{ metrics.conf_matrix[1][1] }} (True Positive)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Metrics</h2>
+        <ul>
+            <li>Accuracy: {{ metrics.accuracy }} - (TP + TN) / (TP + TN + FP + FN)</li>
+            <li>Precision: {{ metrics.precision }} - TP / (TP + FP)</li>
+            <li>Recall: {{ metrics.recall }} - TP / (TP + FN)</li>
+            <li>F1 Score: {{ metrics.f1score }} - 2 * (Precision * Recall) / (Precision + Recall)</li>
+            <li>Support: {{ metrics.support }} - Jumlah kasus per kelas dalam dataset</li>
+        </ul>
+        
+        <p>
+            <strong>Keterangan:</strong><br>
+            <strong>TP (True Positives)</strong>: Jumlah kasus yang benar-benar positif dan diprediksi positif oleh model.<br>
+            <strong>TN (True Negatives)</strong>: Jumlah kasus yang benar-benar negatif dan diprediksi negatif oleh model.<br>
+            <strong>FP (False Positives)</strong>: Jumlah kasus yang negatif tetapi diprediksi positif oleh model (Kesalahan Tipe I).<br>
+            <strong>FN (False Negatives)</strong>: Jumlah kasus yang positif tetapi diprediksi negatif oleh model (Kesalahan Tipe II).<br>
+        </p>
+    
+    <h2>Plot</h2>
+    <img src="{{ plot_url }}" alt="Scatter Plot" />
+
+    <!-- Menampilkan Hasil Voting 
+    {% for result in voting_results %}
+    <p>{{ result }}</p>
+    {% endfor %}
+-->
+    <h2>Jumlah Pohon: {{ tree_count }}</h2>
+    </div>
+    {% for tree in tree_images %}
+    <h3>Pohon {{ tree.num }}</h3>
+    <img src="{{ tree.url }}" alt="Decision Tree Image {{ tree.num }}" />
+    {% endfor %}
+
+    <h3>
+        Keterangan
+    </h3>
+    <p>
+        Arti dari warna-warna tersebut:
+    </p>
+    <ul>
+        <li>
+            Biru: Umumnya mewakili satu kelas, misalnya 'normal'.
+        </li>
+        <li>
+            Coklat: Mewakili kelas lain, misalnya 'anomaly'.
+        </li>
+        <li>
+            Biru Terang: Mewakili node daun di mana kelas 'normal' mayoritas tapi dengan margin yang lebih kecil (misalnya, ada campuran, tetapi 'normal' masih mendominasi).
+        </li>
+        <li>
+            Coklat Terang: Mewakili node daun di mana 'anomaly' adalah mayoritas, tetapi dengan proporsi yang lebih rendah daripada node coklat yang lebih gelap.
+        </li>
+    </ul>
+    <p>
+        Intensitas warna menunjukkan seberapa "murni" suatu node terhadap kelas tertentu. Warna yang lebih gelap menunjukkan bahwa node tersebut lebih murni (proporsi kelas dominan lebih tinggi), sedangkan warna yang lebih terang menunjukkan keberagaman yang lebih besar dalam sampel pada node tersebut.
+    </p>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>

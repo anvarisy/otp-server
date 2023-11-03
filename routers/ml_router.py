@@ -10,44 +10,6 @@ from sender.dto import LearnRequest, LearnResponse, RandomForestResponse, UserAc
 from sender.helper import generate_augmented_data, generate_seed_data
 router = APIRouter()
 
-new_request = {
-        "pic_id": "085811751000",
-        "purpose": "LOGIN",
-        "latitude": -6.6502314,
-        "longitude": 106.7560309,
-        "device_name": "SM-A235F",
-        "os_version": "14",
-        "manufacturer": "samsung",
-        "cpu_info": "Qualcomm Technologies, Inc KHAJE",
-        "platform": "ANDROID",
-        "ip": "192.168.1.34"
-    }
-fraud_request = {
-        "pic_id": "085811751000",
-        "purpose": "LOGIN",
-        "latitude": 28.6139,
-        "longitude": 77.2090,
-        "device_name": "Xiaomi Redmi Note 10",
-        "os_version": "14",
-        "manufacturer": "Xiaomi",
-        "cpu_info": "Mediatek Helio G95",
-        "platform": "ANDROID",
-        "ip": "203.123.123.123"
-    }
-outlier_request = {
-        "pic_id": "085811751000",
-        "purpose": "LOGIN",
-        "latitude": 30.6139,
-        "longitude": 106.2090,
-        "device_name": "Sony Experia",
-        "os_version": "14",
-        "manufacturer": "experia",
-        "cpu_info": "Mediatek Helio G95",
-        "platform": "ANDROID",
-        "ip": "192.168.5.34"
-    }
-
-
 # @router.get("/otp/learn/isolation")
 # async def learn_isolation():
 #     isf = IsolationImplementaion()
@@ -71,15 +33,22 @@ async def learn_random_forest(body: LearnRequest):
     filename = f'./uploaded_files/{body.file_name}'
     df = pd.read_csv(filename)
     try:
-        rf.train(df)
+        result = rf.train(df, body.tree_estimator, body.test_count)
+        # Sertakan hasil yang dikembalikan oleh fungsi train dalam response
         return {
             "error": "",
             "status": True,
+            "metrics": result['metrics'],
+            "plot_filename": result['plot_filename'],
+            "voting_results": result['voting_results'],
         }
     except Exception as e:
         return {
             "error": str(e),
             "status": False,
+            "metrics": {},
+            "plot_filename": '',
+            "voting_results": [],
         }
         
 @router.post("/predict-random-forest", response_model=RandomForestResponse)
