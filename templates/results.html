@@ -17,20 +17,20 @@
             <thead>
                 <tr>
                     <th></th>
-                    <th>Predicted: Anomaly</th>
-                    <th>Predicted: Normal</th>
+                    <th>Predict: Anomaly</th>
+                    <th>Predict: Normal</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <th>Actual: Anomaly</th>
-                    <td>{{ metrics.conf_matrix[0][0] }} (True Negative)</td>
-                    <td>{{ metrics.conf_matrix[0][1] }} (False Positive)</td>
+                    <td>{{ metrics.conf_matrix[0][0] }}</td>
+                    <td>{{ metrics.conf_matrix[0][1] }}</td>
                 </tr>
                 <tr>
                     <th>Actual: Normal</th>
-                    <td>{{ metrics.conf_matrix[1][0] }} (False Negative)</td>
-                    <td>{{ metrics.conf_matrix[1][1] }} (True Positive)</td>
+                    <td>{{ metrics.conf_matrix[1][0] }}</td>
+                    <td>{{ metrics.conf_matrix[1][1] }}</td>
                 </tr>
             </tbody>
         </table>
@@ -41,7 +41,7 @@
             <li>Precision: {{ metrics.precision }} - TP / (TP + FP)</li>
             <li>Recall: {{ metrics.recall }} - TP / (TP + FN)</li>
             <li>F1 Score: {{ metrics.f1score }} - 2 * (Precision * Recall) / (Precision + Recall)</li>
-            <li>Support: {{ metrics.support }} - Jumlah kasus per kelas dalam dataset</li>
+            <li>Support: {{ metrics.support }} - Jumlah kasus per kelas dalam dataset</li> 
         </ul>
         
         <p>

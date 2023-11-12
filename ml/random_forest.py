@@ -1,5 +1,4 @@
 import os
-import graphviz
 import pandas as pd
 import joblib
 import matplotlib.pyplot as plt
@@ -10,9 +9,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.tree import export_graphviz, plot_tree
+from sklearn.tree import plot_tree
 import numpy as np
-from subprocess import call
 import shutil
 
 def empty_folder(folder):
@@ -51,23 +49,24 @@ class RandomForestImplementation:
         X_train, X_test, y_train, y_test = train_test_split(X_processed, y, test_size=test_count, random_state=42)
 
         # Inisialisasi dan pelatihan model Random Forest
-        clf = RandomForestClassifier(n_estimators=tree_count, class_weight='balanced', random_state=42)
+        clf = RandomForestClassifier(n_estimators=tree_count,  class_weight='balanced', random_state=42)
         clf.fit(X_train, y_train)
         y_pred = clf.predict(X_test)
         accuracy = accuracy_score(y_test, y_pred)
         conf_matrix = confusion_matrix(y_test, y_pred)
         print(conf_matrix)
         conf_matrix_html = conf_matrix.tolist()
-        report = classification_report(y_test, y_pred, zero_division=1, output_dict=True)
-        precision = report['macro avg']['precision']
-        recall = report['macro avg']['recall']
-        f1score = report['macro avg']['f1-score']
-        support = report['macro avg']['support']
+        # report = classification_report(y_test, y_pred, zero_division=1, output_dict=True)
+        precision, recall, f1_score, support = precision_recall_fscore_support(y_test, y_pred)
+        # precision = report['macro avg']['precision']
+        # recall = report['macro avg']['recall']
+        # f1score = report['macro avg']['f1-score']
+        # support = report['macro avg']['support']
         metrics = {
             'accuracy': accuracy,
             'precision': precision,
             'recall': recall,
-            'f1score': f1score,
+            'f1score': f1_score,
             'support': support,
             'conf_matrix': conf_matrix_html,
         }
@@ -101,8 +100,8 @@ class RandomForestImplementation:
             plot_tree(single_tree, filled=True, feature_names=feature_names, class_names=True, rounded=True)
             used_features_indices = np.unique(single_tree.tree_.feature[single_tree.tree_.feature >= 0])
             used_features_names = feature_names[used_features_indices]
-            print(f"Fitur yang digunakan oleh pohon ke-{idx + 1}:")
-            print(used_features_names)
+            # print(f"Fitur yang digunakan oleh pohon ke-{idx + 1}:")
+            # print(used_features_names)
             tree_filename = f'tree_{idx}.png'
             plt.savefig(f'static/trees/{tree_filename}')
             tree_filenames.append(tree_filename)
